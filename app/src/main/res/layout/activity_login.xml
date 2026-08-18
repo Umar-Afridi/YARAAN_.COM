@@ -7,12 +7,10 @@
     android:background="@color/black">
 
     <!-- Background Video View -->
-    <androidx.media3.ui.PlayerView
-        android:id="@+id/playerView"
+    <VideoView
+        android:id="@+id/videoView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:use_controller="false"
-        app:resize_mode="fill"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +20,7 @@
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#66000000"
+        android:background="#55000000"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,8 +40,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="60dp"
+            android:paddingHorizontal="28dp"
+            android:paddingTop="50dp"
             android:paddingBottom="30dp">
 
             <!-- App Icon -->
@@ -59,7 +57,7 @@
                 android:id="@+id/tvAppName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/app_name"
                 android:textColor="@color/white"
                 android:textSize="28sp"
@@ -72,54 +70,76 @@
                 android:layout_weight="1"
                 android:minHeight="40dp" />
 
-            <!-- Action Buttons Row -->
+            <!-- Google Sign-In Button (Full-width white pill button) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGoogleSignIn"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginBottom="16dp"
+                android:text="Google"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                app:icon="@drawable/ic_google_logo"
+                app:iconGravity="start"
+                app:iconPadding="12dp"
+                app:iconSize="26dp"
+                app:iconTint="@null"
+                app:cornerRadius="27dp"
+                android:backgroundTint="@color/white" />
+
+            <!-- Divider Line with OR -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginBottom="20dp">
+                android:layout_marginVertical="12dp">
 
-                <!-- Google Sign-In Button (Circular styled) -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnGoogleSignIn"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginEnd="16dp"
-                    android:insetLeft="0dp"
-                    android:insetTop="0dp"
-                    android:insetRight="0dp"
-                    android:insetBottom="0dp"
-                    android:padding="0dp"
-                    app:icon="@drawable/ic_google_logo"
-                    app:iconPadding="0dp"
-                    app:iconSize="32dp"
-                    app:iconTint="@null"
-                    app:cornerRadius="30dp"
-                    app:strokeColor="@color/white"
-                    app:strokeWidth="1.5dp"
-                    android:backgroundTint="#44FFFFFF" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#88FFFFFF" />
 
-                <!-- Email/Password Toggle Button (Yellow accent icon format) -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnEmailToggle"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:insetLeft="0dp"
-                    android:insetTop="0dp"
-                    android:insetRight="0dp"
-                    android:insetBottom="0dp"
-                    android:padding="0dp"
-                    app:icon="@drawable/ic_email"
-                    app:iconPadding="0dp"
-                    app:iconSize="28dp"
-                    app:iconTint="@color/black"
-                    app:cornerRadius="30dp"
-                    android:backgroundTint="@color/yellow_accent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:text="OR"
+                    android:textColor="#CCFFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#88FFFFFF" />
             </LinearLayout>
+
+            <!-- Email Toggle Button (Yellow circular icon button) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEmailToggle"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                app:icon="@drawable/ic_email"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="28dp"
+                app:iconTint="@color/black"
+                app:cornerRadius="28dp"
+                android:backgroundTint="@color/yellow_accent" />
 
             <!-- Email / Password Authentication Form Container -->
             <com.google.android.material.card.MaterialCardView
@@ -130,7 +150,7 @@
                 android:layout_marginBottom="20dp"
                 app:cardBackgroundColor="@color/card_bg_dark"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
+                app:cardElevation="6dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -229,15 +249,6 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Loading Indicator -->
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:visibility="gone"
-                android:layout_marginBottom="16dp"
-                android:indeterminateTint="@color/yellow_accent" />
-
             <View
                 android:layout_width="1dp"
                 android:layout_height="0dp"
@@ -257,5 +268,33 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <!-- Centered Glass Loading Popup Overlay (Matching screenshot design) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardLoadingPopup"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#CC2A2A2E"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="10dp"
+        app:strokeWidth="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:indeterminateTint="@color/white" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

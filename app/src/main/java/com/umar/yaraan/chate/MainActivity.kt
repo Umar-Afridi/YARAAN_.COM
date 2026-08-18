@@ -120,38 +120,62 @@ class MainActivity : BaseImmersiveActivity() {
                 val token = task.result?.token ?: ""
                 val uid = user.uid
                 val email = user.email ?: ""
-                val displayName = user.displayName ?: email.substringBefore("@")
+                val displayName = user.displayName ?: if (email.isNotEmpty()) email.substringBefore("@") else "User_$uid"
                 val photoUrl = user.photoUrl?.toString() ?: ""
 
-                val userData = JSONObject().apply {
-                    put("uid", uid)
-                    put("email", email)
-                    put("displayName", displayName)
-                    put("photoURL", photoUrl)
-                    put("idToken", token)
-                    put("isLoggedIn", true)
-                }.toString()
+                val userDataMap = mapOf(
+                    "uid" to uid,
+                    "email" to email,
+                    "displayName" to displayName,
+                    "photoURL" to photoUrl,
+                    "idToken" to token,
+                    "isLoggedIn" to true
+                )
+                val userDataJson = JSONObject(userDataMap).toString()
+                val quotedUserData = JSONObject.quote(userDataJson)
+                val quotedToken = JSONObject.quote(token)
+                val quotedUid = JSONObject.quote(uid)
 
                 val jsInject = """
                     (function() {
                         try {
-                            localStorage.setItem('yaraan_user', '$userData');
-                            localStorage.setItem('firebase_user', '$userData');
-                            localStorage.setItem('auth_token', '$token');
-                            localStorage.setItem('user_id', '$uid');
+                            var uData = $quotedUserData;
+                            var tok = $quotedToken;
+                            var uId = $quotedUid;
+
+                            localStorage.setItem('user_logged_in', 'true');
+                            localStorage.setItem('privacy_accepted', 'true');
+                            localStorage.setItem('user_id', uId);
+                            localStorage.setItem('auth_token', tok);
+                            localStorage.setItem('yaraan_user', uData);
+                            localStorage.setItem('firebase_user', uData);
                             localStorage.setItem('is_logged_in', 'true');
+
+                            var authView = document.getElementById('view-auth');
+                            if (authView) {
+                                authView.style.display = 'none';
+                                authView.classList.remove('active');
+                            }
+
+                            var fullAuthPage = document.getElementById('email-auth-full-page');
+                            if (fullAuthPage) {
+                                fullAuthPage.style.display = 'none';
+                            }
 
                             var loginForm = document.querySelector('.login-screen, .auth-container, #loginForm, [class*="login"]');
                             if (loginForm) {
                                 loginForm.style.display = 'none';
                             }
-                            var appContent = document.querySelector('.main-app, .dashboard, #app');
-                            if (appContent) {
-                                appContent.style.display = 'block';
+
+                            var mainView = document.getElementById('view-home') || document.querySelector('.main-app, .dashboard, #app');
+                            if (mainView) {
+                                mainView.style.display = 'block';
+                                mainView.classList.add('active');
                             }
 
+                            window.dispatchEvent(new Event('storage'));
                             if (typeof window.onNativeAuthSuccess === 'function') {
-                                window.onNativeAuthSuccess($userData);
+                                window.onNativeAuthSuccess(JSON.parse(uData));
                             }
                         } catch(e) {
                             console.error('Failed to inject auth state', e);
