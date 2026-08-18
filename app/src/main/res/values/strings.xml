@@ -9,4 +9,7 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="privacy_policy_prefix">By logging in, you agree to our </string>
     <string name="privacy_policy_link">Terms of Service &amp; Privacy Policy</string>
+
+    <!-- OAuth 2.0 Web Client ID from google-services.json for Google Sign-In -->
+    <string name="default_web_client_id" translatable="false">740464208491-r63hohlm9o2lvc40f8gffitrbe6pceq8.apps.googleusercontent.com</string>
 </resources>
