@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Yaraan</string>
+    <string name="login_title">Yaraan</string>
+    <string name="sign_in_google">Sign in with Google</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up / Register</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="privacy_policy_prefix">By logging in, you agree to our </string>
+    <string name="privacy_policy_link">Terms of Service &amp; Privacy Policy</string>
+</resources>
