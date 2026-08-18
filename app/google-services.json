@@ -1,0 +1,71 @@
+{
+  "project_info": {
+    "project_number": "740464208491",
+    "firebase_url": "https://yaraan-voice-chat-f7b85-default-rtdb.firebaseio.com",
+    "project_id": "yaraan-voice-chat-f7b85",
+    "storage_bucket": "yaraan-voice-chat-f7b85.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:740464208491:android:256ca7d21147f04ca09f2e",
+        "android_client_info": {
+          "package_name": "com.umar.yaraan.chate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "740464208491-c4pt68crdjudvhg92j6p3t6or2jch9t9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.umar.yaraan.chate",
+            "certificate_hash": "280493104b31edd979da6d826d341414c96f6ddf"
+          }
+        },
+        {
+          "client_id": "740464208491-mt79in1nlehgcev1q3rfff9cpogvbct2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.umar.yaraan.chate",
+            "certificate_hash": "91afb3ad9db50b810a534b30db29d8fd9b250dad"
+          }
+        },
+        {
+          "client_id": "740464208491-ucsumjfb7vrn7tt54pmec4hgq5kiv4m1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.umar.yaraan.chate",
+            "certificate_hash": "4d555f4408d4f4a5d888334199d39746fb1569dd"
+          }
+        },
+        {
+          "client_id": "740464208491-r63hohlm9o2lvc40f8gffitrbe6pceq8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_06bFtGC54BqB1OoGBU4nAyPABIWsGow"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "740464208491-r63hohlm9o2lvc40f8gffitrbe6pceq8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "740464208491-b1bd5jn36p7a23db5mto48d80jaf0l8b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tempProject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
