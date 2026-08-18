@@ -230,14 +230,14 @@ class LoginActivity : BaseImmersiveActivity() {
     }
 
     private fun showLoading() {
-        binding.progressBar.visibility = View.VISIBLE
+        binding.cardLoadingPopup.visibility = View.VISIBLE
         binding.btnGoogleSignIn.isEnabled = false
         binding.btnEmailToggle.isEnabled = false
         binding.btnLoginSubmit.isEnabled = false
     }
 
     private fun hideLoading() {
-        binding.progressBar.visibility = View.GONE
+        binding.cardLoadingPopup.visibility = View.GONE
         binding.btnGoogleSignIn.isEnabled = true
         binding.btnEmailToggle.isEnabled = true
         binding.btnLoginSubmit.isEnabled = true

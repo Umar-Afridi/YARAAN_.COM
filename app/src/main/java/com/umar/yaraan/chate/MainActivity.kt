@@ -120,7 +120,7 @@ class MainActivity : BaseImmersiveActivity() {
                 val token = task.result?.token ?: ""
                 val uid = user.uid
                 val email = user.email ?: ""
-                val displayName = user.displayName ?: email.substringBefore("@")
+                val displayName = user.displayName ?: if (email.isNotEmpty()) email.substringBefore("@") else "User_$uid"
                 val photoUrl = user.photoUrl?.toString() ?: ""
 
                 val userDataMap = mapOf(
@@ -143,21 +143,37 @@ class MainActivity : BaseImmersiveActivity() {
                             var tok = $quotedToken;
                             var uId = $quotedUid;
 
+                            localStorage.setItem('user_logged_in', 'true');
+                            localStorage.setItem('privacy_accepted', 'true');
+                            localStorage.setItem('user_id', uId);
+                            localStorage.setItem('auth_token', tok);
                             localStorage.setItem('yaraan_user', uData);
                             localStorage.setItem('firebase_user', uData);
-                            localStorage.setItem('auth_token', tok);
-                            localStorage.setItem('user_id', uId);
                             localStorage.setItem('is_logged_in', 'true');
+
+                            var authView = document.getElementById('view-auth');
+                            if (authView) {
+                                authView.style.display = 'none';
+                                authView.classList.remove('active');
+                            }
+
+                            var fullAuthPage = document.getElementById('email-auth-full-page');
+                            if (fullAuthPage) {
+                                fullAuthPage.style.display = 'none';
+                            }
 
                             var loginForm = document.querySelector('.login-screen, .auth-container, #loginForm, [class*="login"]');
                             if (loginForm) {
                                 loginForm.style.display = 'none';
                             }
-                            var appContent = document.querySelector('.main-app, .dashboard, #app');
-                            if (appContent) {
-                                appContent.style.display = 'block';
+
+                            var mainView = document.getElementById('view-home') || document.querySelector('.main-app, .dashboard, #app');
+                            if (mainView) {
+                                mainView.style.display = 'block';
+                                mainView.classList.add('active');
                             }
 
+                            window.dispatchEvent(new Event('storage'));
                             if (typeof window.onNativeAuthSuccess === 'function') {
                                 window.onNativeAuthSuccess(JSON.parse(uData));
                             }
