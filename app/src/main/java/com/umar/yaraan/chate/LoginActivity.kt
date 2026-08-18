@@ -8,13 +8,11 @@ import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
-import androidx.media3.exoplayer.ExoPlayer
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -25,16 +23,20 @@ import com.umar.yaraan.chate.databinding.ActivityLoginBinding
 
 class LoginActivity : BaseImmersiveActivity() {
 
+    companion object {
+        private const val TAG = "LoginActivity"
+        private const val FALLBACK_WEB_CLIENT_ID = "740464208491-r63hohlm9o2lvc40f8gffitrbe6pceq8.apps.googleusercontent.com"
+    }
+
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var googleSignInClient: GoogleSignInClient
-    private var exoPlayer: ExoPlayer? = null
+    private var googleSignInClient: GoogleSignInClient? = null
 
     private val googleSignInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
         try {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             val account = task.getResult(ApiException::class.java)
             account?.idToken?.let { idToken ->
                 firebaseAuthWithGoogle(idToken)
@@ -61,33 +63,49 @@ class LoginActivity : BaseImmersiveActivity() {
     }
 
     private fun setupGoogleSignIn() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        try {
+            val webClientId = try {
+                getString(R.string.default_web_client_id)
+            } catch (e: Exception) {
+                FALLBACK_WEB_CLIENT_ID
+            }
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(webClientId)
+                .requestEmail()
+                .build()
+            googleSignInClient = GoogleSignIn.getClient(this, gso)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize GoogleSignInClient", e)
+        }
     }
 
     private fun setupBackgroundVideo() {
         try {
             val videoUri = Uri.parse("android.resource://" + packageName + "/" + R.raw.bg_login)
-            exoPlayer = ExoPlayer.Builder(this).build().apply {
-                setMediaItem(MediaItem.fromUri(videoUri))
-                repeatMode = Player.REPEAT_MODE_ALL
-                prepare()
-                playWhenReady = true
+            binding.videoView.setVideoURI(videoUri)
+            binding.videoView.setOnPreparedListener { mediaPlayer ->
+                mediaPlayer.isLooping = true
+                mediaPlayer.setVolume(0f, 0f)
+                binding.videoView.start()
             }
-            binding.playerView.player = exoPlayer
+            binding.videoView.setOnErrorListener { _, _, _ ->
+                true // Suppress errors so video failure won't crash UI
+            }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Failed to set up background video", e)
         }
     }
 
     private fun setupUIEvents() {
         binding.btnGoogleSignIn.setOnClickListener {
-            showLoading()
-            val signInIntent = googleSignInClient.signInIntent
-            googleSignInLauncher.launch(signInIntent)
+            val client = googleSignInClient
+            if (client != null) {
+                showLoading()
+                val signInIntent = client.signInIntent
+                googleSignInLauncher.launch(signInIntent)
+            } else {
+                Toast.makeText(this, "Google Sign-In not initialized", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.btnEmailToggle.setOnClickListener {
@@ -232,17 +250,23 @@ class LoginActivity : BaseImmersiveActivity() {
 
     override fun onResume() {
         super.onResume()
-        exoPlayer?.play()
+        try {
+            if (!binding.videoView.isPlaying) {
+                binding.videoView.start()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        exoPlayer?.pause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        exoPlayer?.release()
-        exoPlayer = null
+        try {
+            if (binding.videoView.isPlaying) {
+                binding.videoView.pause()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
