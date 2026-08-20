@@ -58,9 +58,27 @@ class MainActivity : BaseImmersiveActivity() {
         webSettings.mediaPlaybackRequiresUserGesture = false
         webSettings.allowFileAccess = true
         webSettings.allowContentAccess = true
-        webSettings.useWideViewPort = true
-        webSettings.loadWithOverviewMode = true
+        webSettings.useWideViewPort = false
+        webSettings.loadWithOverviewMode = false
+        webSettings.textZoom = 100
+        webSettings.setSupportZoom(false)
+        webSettings.builtInZoomControls = false
+        webSettings.displayZoomControls = false
+        webSettings.userAgentString = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
         webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+
+        binding.webView.addJavascriptInterface(object : Any() {
+            @android.webkit.JavascriptInterface
+            fun onUserLoggedOut() {
+                runOnUiThread {
+                    auth.signOut()
+                    val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        }, "AndroidBridge")
 
         val cookieManager = CookieManager.getInstance()
         cookieManager.setAcceptCookie(true)
@@ -150,6 +168,22 @@ class MainActivity : BaseImmersiveActivity() {
                             localStorage.setItem('yaraan_user', uData);
                             localStorage.setItem('firebase_user', uData);
                             localStorage.setItem('is_logged_in', 'true');
+
+                            var meta = document.querySelector('meta[name="viewport"]');
+                            if (!meta) {
+                                meta = document.createElement('meta');
+                                meta.name = 'viewport';
+                                document.getElementsByTagName('head')[0].appendChild(meta);
+                            }
+                            meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+
+                            var style = document.getElementById('native-view-fix-style');
+                            if (!style) {
+                                style = document.createElement('style');
+                                style.id = 'native-view-fix-style';
+                                style.innerHTML = '#view-auth, #email-auth-full-page, .auth-container, .login-modal { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; } html, body { width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; -webkit-text-size-adjust: 100% !important; } .bottom-nav, .navigation, footer, nav { display: flex !important; visibility: visible !important; opacity: 1 !important; z-index: 9999 !important; }';
+                                document.head.appendChild(style);
+                            }
 
                             var authView = document.getElementById('view-auth');
                             if (authView) {
